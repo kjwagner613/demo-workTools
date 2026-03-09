@@ -125,6 +125,8 @@ const PurchaseOrder = mongoose.model('PurchaseOrder', purchaseOrderSchema)
 
 const app = express()
 
+const normalizeOrigin = (value = '') => value.trim().replace(/\/+$/, '')
+
 const defaultOrigins = [
   'http://localhost:5173',
   'http://localhost:5174',
@@ -132,7 +134,7 @@ const defaultOrigins = [
 ];
 
 const allowedOrigins = CLIENT_ORIGIN
-  ? CLIENT_ORIGIN.split(',').map(o => o.trim()).filter(Boolean)
+  ? CLIENT_ORIGIN.split(',').map(normalizeOrigin).filter(Boolean)
   : defaultOrigins
 
 // console.log("Incoming Origin:", origin);
@@ -146,7 +148,8 @@ app.use(
         callback(null, true)
         return
       }
-      if (allowedOrigins.includes(origin)) {
+      const normalizedOrigin = normalizeOrigin(origin)
+      if (allowedOrigins.includes(normalizedOrigin)) {
         callback(null, true)
         return
       }
