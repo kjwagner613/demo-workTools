@@ -125,12 +125,15 @@ const PurchaseOrder = mongoose.model('PurchaseOrder', purchaseOrderSchema)
 
 const app = express()
 
-const allowedOrigins = (
-  CLIENT_ORIGIN || 'http://localhost:5173,http://localhost:5174,https://demoworktools.netlify.app'
-)
-  .split(',')
-  .map((origin) => origin.trim())
-  .filter(Boolean)
+const defaultOrigins = [
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'https://demoworktools.netlify.app'
+];
+
+const allowedOrigins = CLIENT_ORIGIN
+  ? CLIENT_ORIGIN.split(',').map(o => o.trim()).filter(Boolean)
+  : defaultOrigins
 
 app.use(
   cors({
