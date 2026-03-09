@@ -19,7 +19,8 @@ if (!JWT_SECRET) {
 mongoose
   .connect(MONGO_DB)
   .then(() => {
-    console.log('Connected to MongoDB')
+    const { host, name } = mongoose.connection
+    console.log(`Connected to MongoDB: ${name} @ ${host}`)
   })
   .catch((error) => {
     console.error('MongoDB connection error', error)

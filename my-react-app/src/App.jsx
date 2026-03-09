@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import './App.css'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
-const TOKEN_KEY = 'work-tools-token'
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001'
+const TOKEN_KEY = 'demo-work-tools-token'
 const MAX_PO_ITEMS = 20
 
 const todayISO = new Date().toISOString().slice(0, 10)

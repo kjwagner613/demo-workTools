@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "dev": "node node_modules/nodemon/bin/nodemon.js index.js",
-    "seed:admin": "node scripts/seedAdmin.js"
+    "seed:admin": "node scripts/seedAdmin.js",
+    "setup-demo": "node scripts/setupDemo.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
