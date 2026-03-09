@@ -135,7 +135,7 @@ const allowedOrigins = CLIENT_ORIGIN
   ? CLIENT_ORIGIN.split(',').map(o => o.trim()).filter(Boolean)
   : defaultOrigins
 
-console.log("Incoming Origin:", origin);
+// console.log("Incoming Origin:", origin);
 
 console.log("Allowed Origins:", allowedOrigins);
 
