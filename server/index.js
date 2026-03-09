@@ -126,7 +126,7 @@ const PurchaseOrder = mongoose.model('PurchaseOrder', purchaseOrderSchema)
 const app = express()
 
 const allowedOrigins = (
-  CLIENT_ORIGIN || 'http://localhost:5173,http://localhost:5174'
+  CLIENT_ORIGIN || 'http://localhost:5173,http://localhost:5174,https://demoworktools.netlify.app'
 )
   .split(',')
   .map((origin) => origin.trim())
