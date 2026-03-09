@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import './App.css'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001'
+const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5001').replace(/\/+$/, '')
 const TOKEN_KEY = 'demo-work-tools-token'
 const MAX_PO_ITEMS = 20
 
@@ -43,22 +43,38 @@ const getWeekStart = (value) => {
   return date.toISOString().slice(0, 10)
 }
 
+const buildApiUrl = (path) => `${API_URL}/${String(path || '').replace(/^\/+/, '')}`
+
 const apiFetch = async (token, path, options = {}) => {
   const { method = 'GET', body } = options
   const headers = { 'Content-Type': 'application/json' }
   if (token) {
     headers.Authorization = `Bearer ${token}`
   }
-  const response = await fetch(`${API_URL}${path}`, {
+  const response = await fetch(buildApiUrl(path), {
     method,
     headers,
     body: body ? JSON.stringify(body) : undefined,
   })
   if (!response.ok) {
-    const payload = await response.json().catch(() => ({}))
-    throw new Error(payload.message || 'Request failed')
+    const raw = await response.text().catch(() => '')
+    let payload = null
+    try {
+      payload = raw ? JSON.parse(raw) : null
+    } catch {
+      payload = null
+    }
+    throw new Error(payload?.message || raw || 'Request failed')
   }
-  return response.json()
+  const raw = await response.text()
+  if (!raw) {
+    return {}
+  }
+  try {
+    return JSON.parse(raw)
+  } catch {
+    throw new Error('Server returned an invalid JSON response')
+  }
 }
 
 function App() {
