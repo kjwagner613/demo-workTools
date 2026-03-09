@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import './App.css'
 
-const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5001').replace(/\/+$/, '')
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001'
 const TOKEN_KEY = 'demo-work-tools-token'
 const MAX_PO_ITEMS = 20
 
@@ -43,38 +43,22 @@ const getWeekStart = (value) => {
   return date.toISOString().slice(0, 10)
 }
 
-const buildApiUrl = (path) => `${API_URL}/${String(path || '').replace(/^\/+/, '')}`
-
 const apiFetch = async (token, path, options = {}) => {
   const { method = 'GET', body } = options
   const headers = { 'Content-Type': 'application/json' }
   if (token) {
     headers.Authorization = `Bearer ${token}`
   }
-  const response = await fetch(buildApiUrl(path), {
+  const response = await fetch(`${API_URL}${path}`, {
     method,
     headers,
     body: body ? JSON.stringify(body) : undefined,
   })
   if (!response.ok) {
-    const raw = await response.text().catch(() => '')
-    let payload = null
-    try {
-      payload = raw ? JSON.parse(raw) : null
-    } catch {
-      payload = null
-    }
-    throw new Error(payload?.message || raw || 'Request failed')
+    const payload = await response.json().catch(() => ({}))
+    throw new Error(payload.message || 'Request failed')
   }
-  const raw = await response.text()
-  if (!raw) {
-    return {}
-  }
-  try {
-    return JSON.parse(raw)
-  } catch {
-    throw new Error('Server returned an invalid JSON response')
-  }
+  return response.json()
 }
 
 function App() {
@@ -1057,11 +1041,11 @@ function App() {
         <section className="module-screen">
           <div className="module-screen-header">
             <img
-              src="/DD-logo-vented-wAlpha.png"
-              alt="Discrete Development logo"
+              src="/YourLogoHere.png"
+              alt="Your Company Logo"
               className="module-screen-logo"
             />
-            <p className="eyebrow">Discrete Development</p>
+            <p className="eyebrow">Your Company Name</p>
             <h1>Work Tools</h1>
             <p className="module-screen-subtitle">
               Choose a workspace module. More tools can be added here later.
@@ -1114,12 +1098,12 @@ function App() {
       <header className="top-nav">
         <div className="brand-block">
           <img
-            src="/DD-logo-vented-wAlpha.png"
-            alt="Discrete Development logo"
+            src="/YourLogoHere.png"
+            alt="Your Company Logo"
             className="brand-logo"
           />
           <div>
-            <p className="eyebrow">Discrete Development</p>
+            <p className="eyebrow">Your Company Name</p>
             <h1 className="brand-title">Work Tools</h1>
           </div>
         </div>
@@ -1144,7 +1128,7 @@ function App() {
         <>
       <header className="hero">
         <div>
-          <p className="eyebrow">Discrete Development's Work Tools</p>
+          <p className="eyebrow">Your Company's Work Tools</p>
           <h1>Timesheets</h1>
           <p className="user-name">
             Welcome, {user?.name || user?.email}
@@ -2060,12 +2044,12 @@ function App() {
               <article className="po-doc">
             <div className="po-headline">
               <img
-                src="/DD-logo-vented-wAlpha.png"
-                alt="Discrete Development logo"
+                src="/YourLogoHere.png"
+                alt="Your Company Logo"
                 className="po-logo"
               />
               <div>
-                <h2>DISCRETE DEVELOPMENT LLC</h2>
+                <h2>Your Company Name</h2>
                 <h3>Purchase Order</h3>
               </div>
             </div>
@@ -2123,10 +2107,10 @@ function App() {
               </div>
               <div>
                 <h4>Ship To</h4>
-                <p>Discrete Development LLC</p>
-                <p>1800 Esplanade Ave, Number 3</p>
-                <p>Klamath Falls, Oregon 97601</p>
-                <p>Contact: Kevin Wagner | 805.651.3043</p>
+                <p>Your Company</p>
+                <p>Your Address</p>
+                <p>Your CCity, State, and Zip</p>
+                <p>Contact: Your Name | Your Phone Number</p>
               </div>
             </div>
 
@@ -2260,8 +2244,8 @@ function App() {
 
             <div className="po-signature">
               <p>Authorized By:</p>
-              <p>Kevin Wagner, Founder & Architect</p>
-              <p>Discrete Development LLC</p>
+              <p>Your Name, Your Title</p>
+              <p>Your Company</p>
             </div>
               </article>
             </div>
