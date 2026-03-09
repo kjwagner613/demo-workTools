@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import './App.css'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001'
+const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5001').replace(/\/+$/, '')
 const TOKEN_KEY = 'demo-work-tools-token'
 const MAX_PO_ITEMS = 20
 
@@ -43,13 +43,15 @@ const getWeekStart = (value) => {
   return date.toISOString().slice(0, 10)
 }
 
+const buildApiUrl = (path) => `${API_URL}/${String(path || '').replace(/^\/+/, '')}`
+
 const apiFetch = async (token, path, options = {}) => {
   const { method = 'GET', body } = options
   const headers = { 'Content-Type': 'application/json' }
   if (token) {
     headers.Authorization = `Bearer ${token}`
   }
-  const response = await fetch(`${API_URL}${path}`, {
+  const response = await fetch(buildApiUrl(path), {
     method,
     headers,
     body: body ? JSON.stringify(body) : undefined,

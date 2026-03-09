@@ -125,6 +125,15 @@ const PurchaseOrder = mongoose.model('PurchaseOrder', purchaseOrderSchema)
 
 const app = express()
 
+app.use((req, _res, next) => {
+  if (req.url.includes('//')) {
+    const [pathPart, queryPart] = req.url.split('?')
+    const normalizedPath = pathPart.replace(/\/+/g, '/').replace(/^\//, '/')
+    req.url = queryPart ? `${normalizedPath}?${queryPart}` : normalizedPath
+  }
+  next()
+})
+
 const normalizeOrigin = (value = '') => value.trim().replace(/\/+$/, '')
 
 const defaultOrigins = [
