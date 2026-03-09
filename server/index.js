@@ -687,6 +687,8 @@ app.delete('/api/entries/:id', authMiddleware, async (req, res) => {
   res.json({ message: 'Deleted' })
 })
 
+// not hter
+
 app.listen(PORT, () => {
   console.log(`Server running on ${PORT}`)
 })
